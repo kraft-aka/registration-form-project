@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "./Modal";
 import "./Styles.css";
 
@@ -11,7 +11,8 @@ const RegisterForm = () => {
   });
 
   const [showModal, setShowModal] = useState(false);
-  const [valid, setValid] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
+  const [isValid, setIsValid] = useState(false);
 
   const handleFirstNameValue = (e) => {
     setValues({
@@ -43,7 +44,12 @@ const RegisterForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (values.firstName && values.lastName && values.email && values.password) {
+      setIsValid(true)
+    setSubmitted(true)
     handleModal();
+    
+    }
   };
 
   // handle modal state
@@ -54,47 +60,68 @@ const RegisterForm = () => {
   // handle close modal
   const handleClose = () => {
     setShowModal(false);
+    setValues({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    });
   };
+
+  // to pause submit *** need to fix it
+  useEffect(()=> {
+    setTimeout(()=>{
+      handleSubmit()
+    }, 2000)
+  }, [])
 
   return (
     <div className="form-container">
-      {showModal && (
+      {showModal && submitted && isValid ?(
         <Modal
           showModal={showModal}
           values={values}
           handleClose={handleClose}
         />
-      )}
+      ): null}
       <h2>Registration Form</h2>
       <form onSubmit={handleSubmit}>
         <input
+          // disabled={submitted}
           value={values.firstName}
           type="text"
           id="firstName"
           placeholder="first name"
           onChange={handleFirstNameValue}
+          
         />
-        {!valid ? <p className="warn">Please type your first name</p> : null}
+        {/* {!submitted && !values.firstName ? <span className="warn">Please type your first name</span> : null} */}
         <input
+          // disabled={submitted}
           value={values.lastName}
           type="text"
           id="lastName"
           placeholder="last name"
           onChange={handleLastNameValue}
+          
         />
         <input
+          // disabled={submitted}
           value={values.email}
           type="email"
           id="email"
           placeholder="email"
           onChange={handleEmailValue}
+        
         />
         <input
+          // disabled={submitted}
           value={values.password}
           type="password"
           id="password"
           placeholder="password"
           onChange={handlePasswordValue}
+          
         />
         <input type="submit" id="button" className="submitButton" />
       </form>
