@@ -40,6 +40,10 @@ input:focus {
   border: 5px solid coral;
 }
 
+input:after {
+  letter-spacing: .2em;
+}
+
 #button {
   height: 5em;
   text-transform: uppercase;
